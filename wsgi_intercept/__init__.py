@@ -106,10 +106,13 @@ failing tests, et cetera using the Issue Tracker.
 .. _GitHub: http://github.com/cdent/python3-wsgi-intercept
 
 """
+from __future__ import print_function, unicode_literals, division
 __version__ = '0.0.1'
 
 import sys
-from http.client import HTTPConnection
+import six
+from six.moves import http_client
+HTTPConnection = http_client.HTTPConnection
 from io import BytesIO
 import traceback
 
@@ -404,17 +407,17 @@ class wsgi_fake_socket:
         # return the concatenated results.
         return BytesIO(self.output.getvalue())
 
-    def sendall(self, str):
+    def sendall(self, text):
         """
         Save all the traffic to self.inp.
         """
         if debuglevel >= 2:
-            print(">>>", str, ">>>")
+            print(">>>", text, ">>>")
 
         try:
-            self.inp.write(str)
+            self.inp.write(text)
         except TypeError:
-            self.inp.write(bytes([str]).decode('utf-8'))
+            self.inp.write(six.binary_type(text.decode('utf-8')))
 
     def close(self):
         "Do nothing, for now."
