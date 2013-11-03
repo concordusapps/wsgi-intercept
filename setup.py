@@ -8,4 +8,5 @@ setup(
     author_email = 'cdent@peermore.com',
     license = 'MIT License',
     packages = find_packages(),
+    install_requires=['httplib2']
 )
