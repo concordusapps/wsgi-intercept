@@ -12,9 +12,11 @@ def install_opener():
 
     connectionpool.old_http = connectionpool.HTTPConnection
     connectionpool.HTTPConnection = wsgi_intercept.WSGI_HTTPConnection
+    connectionpool.HTTPConnectionPool.ConnectionCls = wsgi_intercept.WSGI_HTTPConnection
 
     connectionpool.old_https = connectionpool.HTTPSConnection
     connectionpool.HTTPSConnection = wsgi_intercept.WSGI_HTTPSConnection
+    connectionpool.HTTPSConnectionPool.ConnectionCls = wsgi_intercept.WSGI_HTTPSConnection
 
     # we need settimeout()
     wsgi_intercept.wsgi_fake_socket.settimeout = lambda self, timeout: None
@@ -30,3 +32,6 @@ def uninstall_opener():
 
     connectionpool.HTTPConnection = connectionpool.old_http
     connectionpool.HTTPSConnection = connectionpool.old_https
+    connectionpool.HTTPConnectionPool.ConnectionCls = connectionpool.old_http
+    connectionpool.HTTPSConnectionPool.ConnectionCls = connectionpool.old_https
+    
